@@ -1,5 +1,9 @@
-from flask import request, json, Response, Blueprint, g
+from flask import Blueprint
+from flask_jsonpify import jsonify
+from flask_restful import request
+
 from ..models.AlbumModel import AlbumModel, AlbumSchema
+from ..util import response_message
 
 album_api = Blueprint('album_api', __name__)
 album_schema = AlbumSchema()
@@ -12,15 +16,5 @@ def get_all_album():
     """
     albums = AlbumModel.get_all_album()
     ser_albums = album_schema.dump(albums, many=True).data
-    return custom_response(ser_albums, 200)
-
-
-def custom_response(res, status_code):
-    """
-    Custom Response Function
-    """
-    return Response(
-        mimetype="application/json",
-        response=json.dumps(res),
-        status=status_code
-    )
+    res = response_message(200, 'Success', request.url, None, ser_albums)
+    return jsonify(res)

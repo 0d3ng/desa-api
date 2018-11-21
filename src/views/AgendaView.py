@@ -1,5 +1,9 @@
-from flask import request, json, Response, Blueprint, g
+from flask import Blueprint
+from flask_jsonpify import jsonify
+from flask_restful import request
+
 from ..models.AgendaModel import AgendaModel, AgendaSchema
+from ..util import response_message
 
 agenda_api = Blueprint('agenda_api', __name__)
 agenda_schema = AgendaSchema()
@@ -12,7 +16,8 @@ def get_all_agenda():
     """
     agendas = AgendaModel.get_all_agenda()
     ser_agendas = agenda_schema.dump(agendas, many=True).data
-    return custom_response(ser_agendas, 200)
+    res = response_message(200, 'Success', request.url, None, ser_agendas)
+    return jsonify(res)
 
 
 @agenda_api.route('/<int:id_agenda>', methods=['GET'])
@@ -22,9 +27,11 @@ def get_by_agenda(id_agenda):
     """
     agenda = AgendaModel.get_agenda_by_id(id_agenda=id_agenda)
     if not agenda:
-        return custom_response({'error': 'agenda not found'}, 404)
+        res = response_message(404, 'Fail', request.url, 'Agenda not found', None)
+        return jsonify(res)
     ser_agendas = agenda_schema.dump(agenda).data
-    return custom_response(ser_agendas, 200)
+    res = response_message(200, 'Success', request.url, None, ser_agendas)
+    return jsonify(res)
 
 
 @agenda_api.route('/limit', methods=['GET'])
@@ -34,15 +41,5 @@ def get_agenda_limit():
     """
     agendas = AgendaModel.get_agenda_limit()
     ser_agendas = agenda_schema.dump(agendas, many=True).data
-    return custom_response(ser_agendas, 200)
-
-
-def custom_response(res, status_code):
-    """
-    Custom Response Function
-    """
-    return Response(
-        mimetype="application/json",
-        response=json.dumps(res),
-        status=status_code
-    )
+    res = response_message(200, 'Success', request.url, None, ser_agendas)
+    return jsonify(res)

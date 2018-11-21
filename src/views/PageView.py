@@ -1,5 +1,9 @@
-from flask import json, Response, Blueprint
+from flask import Blueprint
+from flask_jsonpify import jsonify
+from flask_restful import request
+
 from ..models.PageModel import PageModel, PageSchema
+from ..util import response_message
 
 page_api = Blueprint('page_api', __name__)
 page_schema = PageSchema()
@@ -12,24 +16,15 @@ def get_all_pages():
     """
     pages = PageModel.get_all_pages()
     ser_pages = page_schema.dump(pages, many=True).data
-    return custom_response(ser_pages, 200)
+    res = response_message(200, 'Success', request.url, None, ser_pages)
+    return jsonify(res)
 
 
 @page_api.route('/<int:page_id>', methods=['GET'])
 def get_page_by_id(page_id):
     page = PageModel.get_page_by_id(page_id)
     if not page:
-        return custom_response({'error': 'page not found'}, 404)
+        return response_message(404, 'Fail', request.url, 'Page not found', None)
     ser_page = page_schema.dump(page).data
-    return custom_response(ser_page, 200)
-
-
-def custom_response(res, status_code):
-    """
-    Custom Response Function
-    """
-    return Response(
-        mimetype="application/json",
-        response=json.dumps(res),
-        status=status_code
-    )
+    res = response_message(200, 'Success', request.url, None, ser_page)
+    return jsonify(res)
