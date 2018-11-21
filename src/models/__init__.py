@@ -5,3 +5,4 @@ db = SQLAlchemy()
 bcrypt = Bcrypt()
 
 from .AgendaModel import AgendaModel, AgendaSchema
+from .AlbumModel import AlbumModel, AlbumSchema

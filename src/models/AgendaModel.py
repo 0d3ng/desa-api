@@ -46,6 +46,14 @@ class AgendaModel(db.Model):
     def get_all_agenda():
         return AgendaModel.query.all()
 
+    @staticmethod
+    def get_agenda_by_id(id_agenda):
+        return AgendaModel.query.get(id_agenda)
+
+    @staticmethod
+    def get_agenda_limit():
+        return AgendaModel.query.order_by(AgendaModel.id_agenda.desc()).limit(10).all()
+
     def __repr__(self):
         return '<id{}>'.format(self.id_agenda)
 
