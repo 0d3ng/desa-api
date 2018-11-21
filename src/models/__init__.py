@@ -6,3 +6,8 @@ bcrypt = Bcrypt()
 
 from .AgendaModel import AgendaModel, AgendaSchema
 from .AlbumModel import AlbumModel, AlbumSchema
+from .ArticleModel import ArticleModel, ArticleSchema
+from .NewsModel import NewsModel, NewsSchema
+from .CategoryModel import CategoryModel, CategorySchema
+from .GaleryModel import GaleryModel, GalerySchema
+from .PageModel import PageModel, PageSchema

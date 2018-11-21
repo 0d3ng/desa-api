@@ -1,11 +1,5 @@
 from . import db
 from marshmallow import fields, Schema
-import enum
-
-
-class ActiveType(enum.Enum):
-    ACTIVE = "Y"
-    NOT_ACTIVE = "N"
 
 
 class AlbumModel(db.Model):
@@ -19,11 +13,11 @@ class AlbumModel(db.Model):
     nama_album = db.Column(db.String(length=100), nullable=False)
     album_seo = db.Column(db.String(length=100), nullable=False)
     gambar = db.Column(db.String(200), nullable=False)
-    aktif = db.Column(db.Enum(ActiveType))
+    aktif = db.Column(db.Enum("Y", "N"))
 
     def __init__(self, data):
         """
-        Class contructor
+        Class constructor
         """
         self.nama_album = data.get('nama_album')
         self.album_seo = data.get('album_seo')
